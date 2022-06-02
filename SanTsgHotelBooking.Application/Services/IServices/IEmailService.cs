@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SanTsgHotelBooking.Application.Services.IServices
 {
-    internal interface IEmailService
+    public interface IEmailService
     {
     }
 }
