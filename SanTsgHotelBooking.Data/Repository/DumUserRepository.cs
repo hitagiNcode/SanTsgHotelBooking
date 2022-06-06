@@ -16,5 +16,10 @@ namespace SanTsgHotelBooking.Data.Repository
             _db = db;
         }
 
+        public void Update(DumUser obj)
+        {
+            _db.DumUsers.Update(obj);
+        }
+
     }
 }
