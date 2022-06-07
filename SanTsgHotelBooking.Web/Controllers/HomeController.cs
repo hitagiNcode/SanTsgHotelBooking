@@ -11,7 +11,7 @@ namespace SanTsgHotelBooking.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger , IUnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
@@ -35,7 +35,7 @@ namespace SanTsgHotelBooking.Web.Controllers
         {
             if (obj.isUserActive == false)
             {
-                ModelState.AddModelError("isDeleted","Can't add users as inactive.");
+                ModelState.AddModelError("isActive", "Can't add users as inactive.");
             }
             if (ModelState.IsValid)
             {
@@ -55,23 +55,21 @@ namespace SanTsgHotelBooking.Web.Controllers
             {
                 return NotFound();
             }
-            //var categoryFromDb = _db.Categories.Find(id);
-            var categoryFromDbFirst = _unitOfWork.DumUser.GetFirstOrDefault(u => u.Id == id);
-            //var categoryFromDbSingle = _db.Categories.SingleOrDefault(u => u.Id == id);
+            var userList = _unitOfWork.DumUser.GetFirstOrDefault(u => u.Id == id);
 
-            if (categoryFromDbFirst == null)
+            if (userList == null)
             {
                 return NotFound();
             }
 
-            return View(categoryFromDbFirst);
+            return View(userList);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(DumUser obj)
         {
-           
+
             if (ModelState.IsValid)
             {
                 _unitOfWork.DumUser.Update(obj);
@@ -100,7 +98,6 @@ namespace SanTsgHotelBooking.Web.Controllers
             return View(userFromDbFirst);
         }
 
-        //POST
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(DumUser user)
@@ -110,21 +107,26 @@ namespace SanTsgHotelBooking.Web.Controllers
             {
                 return NotFound();
             }
-
-            if (user.isUserDeleted == true)
-            {
-                if (ModelState.IsValid)
-                {
-                    _unitOfWork.DumUser.Update(obj);
-                    _unitOfWork.Save();
-                    TempData["success"] = "User deleted softly";
-                    return RedirectToAction("Index");
-                }
-            }
-
             _unitOfWork.DumUser.Remove(obj);
             _unitOfWork.Save();
             TempData["success"] = "User deleted successfully";
+            return RedirectToAction("Index");
+        }
+
+        //POST
+        [HttpPost, ActionName("SoftDelete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult SoftDeletePOST(DumUser user)
+        {
+            var obj = _unitOfWork.DumUser.GetFirstOrDefault(u => u.Id == user.Id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            obj.isUserDeleted = true;
+            _unitOfWork.DumUser.Update(obj);
+            _unitOfWork.Save();
+            TempData["success"] = "User deleted softly";
             return RedirectToAction("Index");
         }
         #endregion

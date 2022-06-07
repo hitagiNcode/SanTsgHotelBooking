@@ -18,5 +18,25 @@ namespace SanTsgHotelBooking.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Index(string searchString)
+        {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                //var hotelProducts = _unitOfWork.HotelProducts.GetAll(u => u.City.Contains(searchString)).ToList();
+                return View();
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AutoComplete(string term)
+        {
+            var cities = _unitOfWork.Cities.GetAll(u => u.CityName.Contains(term)).Select(u => u.CityName).ToList();
+            return Json(cities);
+        }
     }
 }

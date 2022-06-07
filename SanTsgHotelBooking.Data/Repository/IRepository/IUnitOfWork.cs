@@ -4,6 +4,8 @@
     {
         IDumUserRepository DumUser { get; }
 
+        ICityRepository Cities { get; }
+
         void Save();
     }
 }

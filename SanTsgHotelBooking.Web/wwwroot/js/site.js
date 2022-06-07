@@ -7,12 +7,13 @@ $(function () {
     $("#searchBox").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: '/api/search',
+                url: '/Search/AutoComplete/',
                 headers: {
                     "RequestVerificationToken":
                         $('input[name="__RequestVerificationToken"]').val()
                 },
                 data: { "term": request.term },
+                type: "POST",
                 dataType: "json",
                 success: function (data) {
                     response($.map(data, function (item) {
@@ -29,7 +30,7 @@ $(function () {
 
         },
         select: function (e, i) {
-            //func
+            //$("#box").val(i.item.val);
         },
         minLength: 3
     });

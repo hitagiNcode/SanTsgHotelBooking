@@ -34,6 +34,18 @@
             }
             <span asp-validation-for="isUserActive" class="text-danger"></span>
         </div>
+        <div class="mb-3">
+            <label asp-for="isUserDeleted"></label>
+            @if (Model.isUserDeleted == true)
+            {
+                <input asp-for="isUserDeleted" type="checkbox" checked />
+            }
+            else
+            {
+                <input asp-for="isUserDeleted" type="checkbox" />
+            }
+            <span asp-validation-for="isUserDeleted" class="text-danger"></span>
+        </div>
         <button type="submit" class="btn btn-warning" style="width:150px">Edit</button>
 
         <a asp-controller="Home" asp-action="Index" class="btn btn-secondary" style="width:150px">
