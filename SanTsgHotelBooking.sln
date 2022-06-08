@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanTsgHotelBooking.Web", "SanTsgHotelBooking.Web\SanTsgHotelBooking.Web.csproj", "{22B4539B-0D8E-4BFB-AA45-81D6FB8AB2A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanTsgHotelBooking.Web", "SanTsgHotelBooking.Web\SanTsgHotelBooking.Web.csproj", "{22B4539B-0D8E-4BFB-AA45-81D6FB8AB2A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanTsgHotelBooking.Data", "SanTsgHotelBooking.Data\SanTsgHotelBooking.Data.csproj", "{BE1CBAD9-F680-4C57-BD2C-128640A9A248}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanTsgHotelBooking.Data", "SanTsgHotelBooking.Data\SanTsgHotelBooking.Data.csproj", "{BE1CBAD9-F680-4C57-BD2C-128640A9A248}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanTsgHotelBooking.Domain", "SanTsgHotelBooking.Domain\SanTsgHotelBooking.Domain.csproj", "{0D9FB2C2-0004-4618-91DB-1A594BF43413}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanTsgHotelBooking.Domain", "SanTsgHotelBooking.Domain\SanTsgHotelBooking.Domain.csproj", "{0D9FB2C2-0004-4618-91DB-1A594BF43413}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanTsgHotelBooking.Application", "SanTsgHotelBooking.Application\SanTsgHotelBooking.Application.csproj", "{817F3DF9-9FFE-4C1C-A23E-CD0D23DA3BEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanTsgHotelBooking.Application", "SanTsgHotelBooking.Application\SanTsgHotelBooking.Application.csproj", "{817F3DF9-9FFE-4C1C-A23E-CD0D23DA3BEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanTsgHotelBooking.Shared", "SanTsgHotelBooking.Shared\SanTsgHotelBooking.Shared.csproj", "{5FB36327-3C92-4407-8FCE-1644862A0D69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{817F3DF9-9FFE-4C1C-A23E-CD0D23DA3BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{817F3DF9-9FFE-4C1C-A23E-CD0D23DA3BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{817F3DF9-9FFE-4C1C-A23E-CD0D23DA3BEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FB36327-3C92-4407-8FCE-1644862A0D69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FB36327-3C92-4407-8FCE-1644862A0D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FB36327-3C92-4407-8FCE-1644862A0D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FB36327-3C92-4407-8FCE-1644862A0D69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,18 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Serilog" Version="2.11.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SanTsgHotelBooking.Application\SanTsgHotelBooking.Application.csproj" />
     <ProjectReference Include="..\SanTsgHotelBooking.Data\SanTsgHotelBooking.Data.csproj" />
     <ProjectReference Include="..\SanTsgHotelBooking.Domain\SanTsgHotelBooking.Domain.csproj" />
+    <ProjectReference Include="..\SanTsgHotelBooking.Shared\SanTsgHotelBooking.Shared.csproj" />
   </ItemGroup>
 
 </Project>

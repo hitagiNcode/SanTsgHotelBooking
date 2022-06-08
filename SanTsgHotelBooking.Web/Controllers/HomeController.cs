@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SanTsgHotelBooking.Application.Models;
+using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Data.Repository.IRepository;
 using SanTsgHotelBooking.Domain;
 using SanTsgHotelBooking.Web.Models;
@@ -10,11 +12,13 @@ namespace SanTsgHotelBooking.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
-        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, IEmailService emailService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -31,7 +35,7 @@ namespace SanTsgHotelBooking.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(DumUser obj)
+        public async Task<IActionResult> Create(DumUser obj)
         {
             if (obj.isUserActive == false)
             {
@@ -41,6 +45,15 @@ namespace SanTsgHotelBooking.Web.Controllers
             {
                 _unitOfWork.DumUser.Add(obj);
                 _unitOfWork.Save();
+
+                MailRequest mail = new MailRequest()
+                {
+                    Body = "Kullanici Kaydiniz basariyla alinmistir. " + obj.UserName + " teşekkür ederiz.",
+                    Subject = "SanTsg Kulanici kaydi",
+                    ToEmail = obj.Email
+                };
+                await _emailService.SendEmailAsync(mail);
+
                 TempData["success"] = "User created successfully";
                 return RedirectToAction("Index");
             }
