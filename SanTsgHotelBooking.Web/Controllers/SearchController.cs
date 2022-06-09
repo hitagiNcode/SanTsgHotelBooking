@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Data.Repository.IRepository;
+using SanTsgHotelBooking.Domain;
 
 namespace SanTsgHotelBooking.Web.Controllers
 {
@@ -7,11 +9,15 @@ namespace SanTsgHotelBooking.Web.Controllers
     {
         private readonly ILogger<SearchController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITourVisioAPIService _tourVisioAPIService;
+        public const string JWTKeyName = "_token";
 
-        public SearchController(ILogger<SearchController> logger, IUnitOfWork unitOfWork)
+        public SearchController(ILogger<SearchController> logger, IUnitOfWork unitOfWork, ITourVisioAPIService tourVisioAPIService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _tourVisioAPIService = tourVisioAPIService;
+            
         }
 
         public IActionResult Index()
@@ -20,15 +26,37 @@ namespace SanTsgHotelBooking.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string searchString)
+        public async Task<IActionResult> Index(string searchString)
         {
+            IEnumerable<HotelProduct> hotels = new List<HotelProduct>();
+
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(JWTKeyName)))
+            {
+                HttpContext.Session.SetString(JWTKeyName, await _tourVisioAPIService.LoginTourVisio());
+                string? token = HttpContext.Session.GetString(JWTKeyName);
+                _logger.LogInformation("Tourvisio login token:" + token);
+            }
             if (!String.IsNullOrEmpty(searchString))
             {
-                //var hotelProducts = _unitOfWork.HotelProducts.GetAll(u => u.City.Contains(searchString)).ToList();
-                return View();
+                string? token = HttpContext.Session.GetString(JWTKeyName);
+
+                hotels =  await _tourVisioAPIService.SearchHotels(searchString,token);
+                return View(hotels);
             }
 
-            return View();
+            return View(hotels);
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            string? token = HttpContext.Session.GetString(JWTKeyName);
+            HotelDetails hotelDetails = await _tourVisioAPIService.GetHotelDetails(id??0, token);
+
+            return View(hotelDetails);
         }
 
         [HttpPost]
@@ -38,5 +66,6 @@ namespace SanTsgHotelBooking.Web.Controllers
             var cities = _unitOfWork.Cities.GetAll(u => u.CityName.Contains(term)).Select(u => u.CityName).ToList();
             return Json(cities);
         }
+
     }
 }
