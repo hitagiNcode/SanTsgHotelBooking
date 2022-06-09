@@ -1,28 +1,17 @@
-﻿@model IEnumerable<SanTsgHotelBooking.Domain.HotelProduct>
+﻿@model IEnumerable<SanTsgHotelBooking.Domain.City>
 @{
-    ViewData["Title"] = "Search";
+    ViewData["Title"] = "Search Hotels";
 }
 
 <div class="container p-3">
-    <div>
-        <form class="row g-3" asp-controller="Search" asp-action="Index" method="get">
-            <div class="col-8">
-                <input type="text" name="SearchString" class="form-control" id="searchBox" placeholder="Search here...">
-            </div>
-            <div class="col-auto">
-                <input class="btn btn-primary mb-3" type="submit" value="Search" />
-            </div>
-        </form>
-    </div>
-
+    <h4 class="text-info">Please choose a city</h4>
     <div class="container p-1">
         <table id="tblData" class="table table-bordered table-striped dt-responsive nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th>Otel Id</th>
-                    <th>Otel Ismi</th>
-                    <th>Şehir</th>
-                    <th>Detaylar</th>
+                    <th>Şehir İsmi</th>
+                    <th>Ülke Kodu</th>
+                    <th>Seç</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,18 +19,15 @@
                 {
                     <tr>
                         <td width="10%">
-                            @obj.HotelId
+                            @obj.CountryCode
                         </td>
                         <td width="40%">
-                            @obj.HotelName
-                        </td>
-                        <td width="20%">
-                            @obj.City
+                            @obj.CityName
                         </td>
                         <td width="7%">
                             <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Search" asp-action="Details" asp-route-id="@obj.HotelId"
-                           class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Details</a>
+                                <a asp-controller="Search" asp-action="Hotels" asp-route-searchString="@obj.CityName"
+                               class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Seçim</a>
                             </div>
                         </td>
                     </tr>
@@ -49,5 +35,4 @@
             </tbody>
         </table>
     </div>
-
 </div>

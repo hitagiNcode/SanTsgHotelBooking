@@ -22,11 +22,13 @@ namespace SanTsgHotelBooking.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<City> cities = _unitOfWork.Cities.GetAll().ToList();
+
+            return View(cities);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Hotels(string searchString)
         {
             IEnumerable<HotelProduct> hotels = new List<HotelProduct>();
 
@@ -44,7 +46,7 @@ namespace SanTsgHotelBooking.Web.Controllers
                 return View(hotels);
             }
 
-            return View(hotels);
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Details(int? id)

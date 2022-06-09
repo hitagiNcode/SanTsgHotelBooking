@@ -16,6 +16,7 @@ $(function () {
                 type: "POST",
                 dataType: "json",
                 success: function (data) {
+                    $("#searchBox").val(data[0]);
                     response($.map(data, function (item) {
                         return item;
                     }))
@@ -30,7 +31,7 @@ $(function () {
 
         },
         select: function (e, i) {
-            //$("#box").val(i.item.val);
+            $("#searchBox").val(i.item.val);
         },
         minLength: 3
     });

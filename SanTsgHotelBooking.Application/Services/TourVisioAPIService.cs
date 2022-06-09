@@ -24,6 +24,24 @@ namespace SanTsgHotelBooking.Application.Services
             _mapper = mapper;
         }
 
+        public async Task CertainHotelRequest(int id, string token)
+        {
+            string searchUrl = _tourvisioAPISettings.WebService + "/api/productservice/pricesearch";
+            HttpClient client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            CertainHotelPriceRequest hotelPriceRequest = new();
+            var serializeSearch = System.Text.Json.JsonSerializer.Serialize(hotelPriceRequest);
+            StringContent stringContent = new StringContent(serializeSearch, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(searchUrl, stringContent);
+            var apiContent = await response.Content.ReadAsStringAsync();
+            Models.CertainHotelPriceRequestResponse.Root resultHotelPrice = JsonConvert.DeserializeObject<Models.CertainHotelPriceRequestResponse.Root>(apiContent);
+            if(resultHotelPrice.body != null)
+            {
+
+            }
+
+        }
+
         public async Task<IEnumerable<HotelProduct>> SearchHotels(string city, string token)
         {
             List<HotelProduct> hotels = new List<HotelProduct>();
@@ -37,6 +55,7 @@ namespace SanTsgHotelBooking.Application.Services
             var response = await client.PostAsync(searchUrl, stringContent);
             var apiContent = await response.Content.ReadAsStringAsync();
             Models.HotelProductRequest.Root myHotels = JsonConvert.DeserializeObject<Models.HotelProductRequest.Root>(apiContent);
+            if(myHotels.body != null) { 
             for (int i = 0; i < myHotels.body.items.Count; i++)
             {
                 if (myHotels.body.items[i].hotel != null)
@@ -48,13 +67,14 @@ namespace SanTsgHotelBooking.Application.Services
                     hotels.Add(newHotel);
                 }
             }
+            }
 
             return hotels;
         }
 
         public async Task<HotelDetails> GetHotelDetails(int id, string token)
         {
-            HotelDetails hotelDetails;
+            HotelDetails hotelDetails = new();
             string searchUrl = _tourvisioAPISettings.WebService + "/api/productservice/getproductInfo";
             HttpClient client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -64,9 +84,20 @@ namespace SanTsgHotelBooking.Application.Services
             var response = await client.PostAsync(searchUrl, stringContent);
             var apiContent = await response.Content.ReadAsStringAsync();
             Models.HotelInfoRequest.Root hotelInfoDetails = JsonConvert.DeserializeObject<Models.HotelInfoRequest.Root>(apiContent);
-            hotelDetails = new HotelDetails { HotelName = hotelInfoDetails.body.hotel.name, HotelId = hotelInfoDetails.body.hotel.id, CityName = hotelInfoDetails.body.hotel.city.name, 
-                CountryName = hotelInfoDetails.body.hotel.country.name, HomePage = hotelInfoDetails.body.hotel.homePage, HotelCityId = hotelInfoDetails.body.hotel.city.id,
-            PhoneNumber = hotelInfoDetails.body.hotel.phoneNumber, ThumbnailFullUrl = hotelInfoDetails.body.hotel.thumbnailFull};
+            if (hotelInfoDetails.body != null)
+            {
+                hotelDetails = new HotelDetails
+                {
+                    HotelName = hotelInfoDetails.body.hotel.name,
+                    HotelId = hotelInfoDetails.body.hotel.id,
+                    CityName = hotelInfoDetails.body.hotel.city.name,
+                    CountryName = hotelInfoDetails.body.hotel.country.name,
+                    HomePage = hotelInfoDetails.body.hotel.homePage,
+                    HotelCityId = hotelInfoDetails.body.hotel.city.id,
+                    PhoneNumber = hotelInfoDetails.body.hotel.phoneNumber,
+                    ThumbnailFullUrl = hotelInfoDetails.body.hotel.thumbnailFull
+                };
+            }
 
             return hotelDetails;
         }
