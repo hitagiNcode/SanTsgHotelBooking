@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SanTsgHotelBooking.Application.Models;
+using SanTsgHotelBooking.Application.Models.Requests;
 using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Data.Repository.IRepository;
 using SanTsgHotelBooking.Domain;

@@ -1,4 +1,4 @@
-﻿namespace SanTsgHotelBooking.Application.Models
+﻿namespace SanTsgHotelBooking.Application.Models.Requests
 {
     public class MailRequest
     {

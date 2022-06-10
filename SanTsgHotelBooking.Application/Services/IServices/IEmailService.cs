@@ -1,4 +1,4 @@
-﻿using SanTsgHotelBooking.Application.Models;
+﻿using SanTsgHotelBooking.Application.Models.Requests;
 
 namespace SanTsgHotelBooking.Application.Services.IServices
 {

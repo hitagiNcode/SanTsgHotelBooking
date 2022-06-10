@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SanTsgHotelBooking.Application.Models
+namespace SanTsgHotelBooking.Application.Models.Requests
 {
-    public class HotelInfoRequestVars
+    public class GetHotelDetailsByIdRequest
     {
         public int productType { get; set; } = 2;
         public int ownerProvider { get; set; } = 2;

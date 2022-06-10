@@ -2,7 +2,7 @@
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using SanTsgHotelBooking.Application.Models;
+using SanTsgHotelBooking.Application.Models.Requests;
 using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Shared.SettingsModels;
 

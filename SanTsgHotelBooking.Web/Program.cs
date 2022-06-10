@@ -9,7 +9,6 @@ using SanTsgHotelBooking.Shared.SettingsModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAutoMapper(typeof(Program));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -31,6 +30,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITourVisioAPIService, TourVisioAPIService>();
+builder.Services.AddScoped<ISanTsgTourVisioService, SanTsgTourVisioService>();
 
 var app = builder.Build();
 

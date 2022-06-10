@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SanTsgHotelBooking.Application.Models;
+using SanTsgHotelBooking.Application.Models.Requests;
 using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Domain;
 using SanTsgHotelBooking.Shared.SettingsModels;
@@ -14,17 +14,15 @@ namespace SanTsgHotelBooking.Application.Services
     {
         private readonly TourvisioAPISettings _tourvisioAPISettings;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IMapper _mapper;
         public string? tourVisioJWT { get; private set; }
 
-        public TourVisioAPIService(IOptions<TourvisioAPISettings> tourvisioAPISettings, IHttpClientFactory httpClientFactory, IMapper mapper)
+        public TourVisioAPIService(IOptions<TourvisioAPISettings> tourvisioAPISettings, IHttpClientFactory httpClientFactory)
         {
             _tourvisioAPISettings = tourvisioAPISettings.Value;
             _httpClientFactory = httpClientFactory;
-            _mapper = mapper;
         }
 
-        public async Task CertainHotelRequest(int id, string token)
+        public async Task HotelPriceRequest(int id, string token)
         {
             string searchUrl = _tourvisioAPISettings.WebService + "/api/productservice/pricesearch";
             HttpClient client = _httpClientFactory.CreateClient();
@@ -35,7 +33,7 @@ namespace SanTsgHotelBooking.Application.Services
             var response = await client.PostAsync(searchUrl, stringContent);
             var apiContent = await response.Content.ReadAsStringAsync();
             Models.CertainHotelPriceRequestResponse.Root resultHotelPrice = JsonConvert.DeserializeObject<Models.CertainHotelPriceRequestResponse.Root>(apiContent);
-            if(resultHotelPrice.body != null)
+            if (resultHotelPrice.body != null)
             {
 
             }
@@ -55,18 +53,24 @@ namespace SanTsgHotelBooking.Application.Services
             var response = await client.PostAsync(searchUrl, stringContent);
             var apiContent = await response.Content.ReadAsStringAsync();
             Models.HotelProductRequest.Root myHotels = JsonConvert.DeserializeObject<Models.HotelProductRequest.Root>(apiContent);
-            if(myHotels.body != null) { 
-            for (int i = 0; i < myHotels.body.items.Count; i++)
+            if (myHotels.body != null)
             {
-                if (myHotels.body.items[i].hotel != null)
+                for (int i = 0; i < myHotels.body.items.Count; i++)
                 {
-                    HotelProduct newHotel = new HotelProduct();
-                    newHotel.City = myHotels.body.items[i].city.name;
-                    newHotel.HotelId = myHotels.body.items[i].hotel.id;
-                    newHotel.HotelName = myHotels.body.items[i].hotel.name;
-                    hotels.Add(newHotel);
+                    if (myHotels.body.items[i].hotel != null)
+                    {
+                        HotelProduct newHotel = new HotelProduct();
+                        newHotel.City = myHotels.body.items[i].city.name;
+                        newHotel.HotelId = myHotels.body.items[i].hotel.id;
+                        newHotel.HotelName = myHotels.body.items[i].hotel.name;
+
+                        hotels.Add(newHotel);
+                    }
+                    /*if (string.Equals(myHotels.body.items[i].city.name, city, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string cityID = myHotels.body.items[i].city.id;
+                    }*/
                 }
-            }
             }
 
             return hotels;
@@ -78,7 +82,7 @@ namespace SanTsgHotelBooking.Application.Services
             string searchUrl = _tourvisioAPISettings.WebService + "/api/productservice/getproductInfo";
             HttpClient client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HotelInfoRequestVars hotelInfoReq = new HotelInfoRequestVars { product = id.ToString()};
+            GetHotelDetailsByIdRequest hotelInfoReq = new GetHotelDetailsByIdRequest { product = id.ToString() };
             var serializeRequest = System.Text.Json.JsonSerializer.Serialize(hotelInfoReq);
             StringContent stringContent = new StringContent(serializeRequest, Encoding.UTF8, "application/json");
             var response = await client.PostAsync(searchUrl, stringContent);
@@ -98,6 +102,7 @@ namespace SanTsgHotelBooking.Application.Services
                     ThumbnailFullUrl = hotelInfoDetails.body.hotel.thumbnailFull
                 };
             }
+            //await HotelPriceRequest(id, token);
 
             return hotelDetails;
         }
