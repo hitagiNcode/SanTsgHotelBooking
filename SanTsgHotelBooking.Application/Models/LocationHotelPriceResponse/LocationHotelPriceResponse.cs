@@ -76,7 +76,7 @@ namespace SanTsgHotelBooking.Application.Models.LocationHotelPriceResponse
     public class Hotel
     {
         public Geolocation geolocation { get; set; }
-        public int stars { get; set; }
+        public string stars { get; set; }
         public List<Theme> themes { get; set; }
         public List<Board> boards { get; set; }
         public Country country { get; set; }

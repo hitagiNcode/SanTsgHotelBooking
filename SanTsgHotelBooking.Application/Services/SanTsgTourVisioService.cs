@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
-using SanTsgHotelBooking.Application.Models;
+using Newtonsoft.Json;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteRequest;
-using SanTsgHotelBooking.Application.Models.Requests;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceRequest;
+using SanTsgHotelBooking.Application.Models.Requests;
 using SanTsgHotelBooking.Application.Models.TourVisioLoginRequest;
 using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Shared.SettingsModels;
@@ -47,7 +47,7 @@ namespace SanTsgHotelBooking.Application.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = Shared.StaticDetails.ApiType.POST,
-                Data = new LocationHotelPriceRequest() ,
+                Data = new LocationHotelPriceRequest() { arrivalLocations = new List<ArrivalLocation> { new ArrivalLocation { id = id.ToString(), type = 2 } } },
                 Url = _tourvisioAPISettings.WebService + "/api/productservice/pricesearch",
                 AccessToken = token
             });

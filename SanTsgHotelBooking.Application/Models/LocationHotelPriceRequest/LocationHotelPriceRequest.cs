@@ -8,7 +8,7 @@
         public bool getOnlyBestOffers { get; set; } = true;
         public int productType { get; set; } = 2;
         public List<ArrivalLocation> arrivalLocations { get; set; } = new List<ArrivalLocation> { new ArrivalLocation { id = "23494", type = 2 } };
-        public List<RoomCriterion> roomCriteria { get; set; } = new List<RoomCriterion> { new RoomCriterion { adult = 2, childAges = new List<int> { 2, 5 } }, new RoomCriterion { adult = 1, childAges = new List<int> { 3 } } };
+        public List<RoomCriterion> roomCriteria { get; set; } = new List<RoomCriterion> { new RoomCriterion { adult = 2 } };
         public string nationality { get; set; } = "DE";
         public string checkIn { get; set; } = "2023-06-20";
         public int night { get; set; } = 7;

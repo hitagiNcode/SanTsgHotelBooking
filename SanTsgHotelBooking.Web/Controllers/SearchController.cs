@@ -28,7 +28,6 @@ namespace SanTsgHotelBooking.Web.Controllers
         public IActionResult Index()
         {
             IEnumerable<Domain.City> cities = _unitOfWork.Cities.GetAll().ToList();
-
             return View(cities);
         }
 
@@ -37,11 +36,12 @@ namespace SanTsgHotelBooking.Web.Controllers
         {
             if (!String.IsNullOrEmpty(searchString) && searchString.Length >= 3)
             {
+                string token = await GetSanTsgTourVisioToken();
                 int arrivalLocId = 0;
                 bool isArrivalLocFound = false;
                 if (!isArrivalLocFound)
                 {
-                    var response = await _sanTsgTourVisioService.GetArrivalAutoCompleteAsync<GetArrivalAutocompleteResponse>(searchString, await GetSanTsgTourVisioToken());
+                    var response = await _sanTsgTourVisioService.GetArrivalAutoCompleteAsync<GetArrivalAutocompleteResponse>(searchString, token);
                     if (response != null && response.Header.success)
                     {
                         for (int i = 0; i < response.Body.items.Count; i++)
@@ -59,10 +59,9 @@ namespace SanTsgHotelBooking.Web.Controllers
                 }
 
                 IEnumerable<HotelProduct> hotels = new List<HotelProduct>();
-                var hotelResponse = await _sanTsgTourVisioService.LocationHotelPriceSearchAsync<LocationHotelPriceResponse>(arrivalLocId, await GetSanTsgTourVisioToken());
+                var hotelResponse = await _sanTsgTourVisioService.LocationHotelPriceSearchAsync<LocationHotelPriceResponse>(arrivalLocId, token);
 
 
-                //hotels = await _tourVisioAPIService.SearchHotels(searchString, await GetSanTsgTourVisioToken());
                 return View(hotels);
             }
             return RedirectToAction("Index");
@@ -84,20 +83,12 @@ namespace SanTsgHotelBooking.Web.Controllers
         public JsonResult AutoComplete(string term)
         {
             var cities = _unitOfWork.Cities.GetAll(u => u.CityName.Contains(term)).Select(u => u.CityName).ToList();
+
+            //string token = await GetSanTsgTourVisioToken();
+            //var hotelResponse = await _sanTsgTourVisioService.LocationHotelPriceSearchAsync<LocationHotelPriceResponse>(23494, token);
+
             return Json(cities);
         }
-
-        /*private async Task<string> TourVisioToken()
-        {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(JWTKeyName)))
-            {
-                HttpContext.Session.SetString(JWTKeyName, await _tourVisioAPIService.LoginTourVisio());
-                _logger.LogInformation("Tourvisio login token:" + HttpContext.Session.GetString(JWTKeyName));
-            }
-            string token = HttpContext.Session.GetString(JWTKeyName);
-
-            return token;
-        }*/
 
         private async Task<string> GetSanTsgTourVisioToken()
         {

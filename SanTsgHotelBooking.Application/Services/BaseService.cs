@@ -30,6 +30,7 @@ namespace SanTsgHotelBooking.Application.Services
                 client.DefaultRequestHeaders.Clear();
                 if (apiRequest.Data != null)
                 {
+                    string testData = JsonConvert.SerializeObject(apiRequest.Data);
                     message.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data),
                         Encoding.UTF8, "application/json");
                 }
@@ -56,8 +57,8 @@ namespace SanTsgHotelBooking.Application.Services
                 apiResponse = await client.SendAsync(message);
 
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();
-                var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
-
+                var apiResponseDto = await Task.Run(() => JsonConvert.DeserializeObject<T>(apiContent));
+                
                 return apiResponseDto;
             }
             catch (Exception e)
