@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteRequest;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceRequest;
 using SanTsgHotelBooking.Application.Models.Requests;

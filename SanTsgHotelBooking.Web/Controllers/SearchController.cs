@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteResponse;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceResponse;
 using SanTsgHotelBooking.Application.Models.TourVisioLoginResponse;
@@ -38,32 +37,28 @@ namespace SanTsgHotelBooking.Web.Controllers
             {
                 string token = await GetSanTsgTourVisioToken();
                 int arrivalLocId = 0;
-                bool isArrivalLocFound = false;
-                if (!isArrivalLocFound)
+                var response = await _sanTsgTourVisioService.GetArrivalAutoCompleteAsync<GetArrivalAutocompleteResponse>(searchString, token);
+                if (response != null && response.Header.success)
                 {
-                    var response = await _sanTsgTourVisioService.GetArrivalAutoCompleteAsync<GetArrivalAutocompleteResponse>(searchString, token);
-                    if (response != null && response.Header.success)
+                    for (int i = 0; i < response.Body.items.Count; i++)
                     {
-                        for (int i = 0; i < response.Body.items.Count; i++)
+                        if (response.Body.items[i].city != null)
                         {
-                            if (response.Body.items[i].city != null)
+                            if (string.Equals(response.Body.items[i].city.name, searchString, StringComparison.OrdinalIgnoreCase))
                             {
-                                if (string.Equals(response.Body.items[i].city.name, searchString, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    arrivalLocId = Int32.Parse(response.Body.items[i].city.id);
-                                    isArrivalLocFound = true;
-                                }
+                                arrivalLocId = Int32.Parse(response.Body.items[i].city.id);
                             }
                         }
                     }
                 }
-
-                IEnumerable<HotelProduct> hotels = new List<HotelProduct>();
-                var hotelResponse = await _sanTsgTourVisioService.LocationHotelPriceSearchAsync<LocationHotelPriceResponse>(arrivalLocId, token);
-
-
-                return View(hotels);
+                if (arrivalLocId > 0)
+                {
+                    ViewData["CityID"] = arrivalLocId;
+                    return View();
+                }
+                else { return RedirectToAction("Index"); }
             }
+
             return RedirectToAction("Index");
         }
 
@@ -78,18 +73,6 @@ namespace SanTsgHotelBooking.Web.Controllers
             return View(hotelDetails);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult AutoComplete(string term)
-        {
-            var cities = _unitOfWork.Cities.GetAll(u => u.CityName.Contains(term)).Select(u => u.CityName).ToList();
-
-            //string token = await GetSanTsgTourVisioToken();
-            //var hotelResponse = await _sanTsgTourVisioService.LocationHotelPriceSearchAsync<LocationHotelPriceResponse>(23494, token);
-
-            return Json(cities);
-        }
-
         private async Task<string> GetSanTsgTourVisioToken()
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString(JWTKeyName)))
@@ -100,11 +83,46 @@ namespace SanTsgHotelBooking.Web.Controllers
                 {
                     newToken = response.Body.token;
                     HttpContext.Session.SetString(JWTKeyName, newToken);
+                    _logger.LogInformation("Tourvisio new login requested token:" + newToken);
+
                 }
-                _logger.LogInformation("Tourvisio new login requested token:" + newToken);
+                else
+                {
+                    _logger.LogInformation("Couldn't retrieve token" + DateTime.Now);
+                }
             }
             string token = HttpContext.Session.GetString(JWTKeyName);
             return token;
         }
+
+        #region APICALLS
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<JsonResult> GetHotelsPrices(string term)
+        {
+            if (!String.IsNullOrEmpty(term) && term.Length >= 3)
+            {
+                string token = await GetSanTsgTourVisioToken();
+                int arrivalLocId = int.Parse(term);
+                var hotelResponse = await _sanTsgTourVisioService.LocationHotelPriceSearchAsync<LocationHotelPriceResponse>(arrivalLocId, token);
+                if (hotelResponse != null && hotelResponse.header.success && hotelResponse.body.hotels != null)
+                {
+                    var hotelVMs = hotelResponse.body.hotels;
+                    return Json(new { data = hotelVMs });
+                }
+            }
+            return Json("Search problem...");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AutoComplete(string term)
+        {
+            var cities = _unitOfWork.Cities.GetAll(u => u.CityName.Contains(term)).Select(u => u.CityName).ToList();
+            return Json(cities);
+        }
+
+        #endregion
     }
 }
