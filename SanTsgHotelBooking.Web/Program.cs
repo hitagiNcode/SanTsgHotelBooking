@@ -29,7 +29,6 @@ builder.Services.Configure<TourvisioAPISettings>(builder.Configuration.GetSectio
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<ITourVisioAPIService, TourVisioAPIService>();
 builder.Services.AddScoped<ISanTsgTourVisioService, SanTsgTourVisioService>();
 
 var app = builder.Build();

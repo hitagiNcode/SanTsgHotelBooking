@@ -5,7 +5,6 @@ using SanTsgHotelBooking.Application.Models.LocationHotelPriceResponse;
 using SanTsgHotelBooking.Application.Models.TourVisioLoginResponse;
 using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Data.Repository.IRepository;
-using SanTsgHotelBooking.Domain;
 
 namespace SanTsgHotelBooking.Web.Controllers
 {
@@ -13,15 +12,13 @@ namespace SanTsgHotelBooking.Web.Controllers
     {
         private readonly ILogger<SearchController> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ITourVisioAPIService _tourVisioAPIService;
         private readonly ISanTsgTourVisioService _sanTsgTourVisioService;
         public const string JWTKeyName = "_token";
 
-        public SearchController(ILogger<SearchController> logger, IUnitOfWork unitOfWork, ITourVisioAPIService tourVisioAPIService, ISanTsgTourVisioService sanTsgTourVisioService)
+        public SearchController(ILogger<SearchController> logger, IUnitOfWork unitOfWork, ISanTsgTourVisioService sanTsgTourVisioService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _tourVisioAPIService = tourVisioAPIService;
             _sanTsgTourVisioService = sanTsgTourVisioService;
         }
 
@@ -65,21 +62,18 @@ namespace SanTsgHotelBooking.Web.Controllers
 
         public async Task<IActionResult> HotelDetails(int id)
         {
-            if ( id == 0)
+            if (id == 0)
             {
                 return RedirectToAction("Index");
             }
-            //HotelDetails hotelDetails = await _tourVisioAPIService.GetHotelDetails(id, await GetSanTsgTourVisioToken());
             string token = await GetSanTsgTourVisioToken();
             var hotelResponse = await _sanTsgTourVisioService.GetHotelDetailsByIdAsync<GetProductInfoResponse>(id, token);
             if (hotelResponse != null && hotelResponse.header.success && hotelResponse.body.hotel != null)
             {
                 return View(hotelResponse.body.hotel);
             }
-
             return RedirectToAction("Index");
         }
-
 
         private async Task<string> GetSanTsgTourVisioToken()
         {

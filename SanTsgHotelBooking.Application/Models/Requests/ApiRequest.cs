@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SanTsgHotelBooking.Shared.StaticDetails;
+﻿using static SanTsgHotelBooking.Shared.StaticDetails;
 
 namespace SanTsgHotelBooking.Application.Models.Requests
 {
