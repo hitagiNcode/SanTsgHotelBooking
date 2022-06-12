@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteResponse;
+using SanTsgHotelBooking.Application.Models.GetProductInfoResponse;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceResponse;
 using SanTsgHotelBooking.Application.Models.TourVisioLoginResponse;
 using SanTsgHotelBooking.Application.Services.IServices;
@@ -62,16 +63,23 @@ namespace SanTsgHotelBooking.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> HotelDetails(int id)
         {
-            if (id == null || id == 0)
+            if ( id == 0)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
-            HotelDetails hotelDetails = await _tourVisioAPIService.GetHotelDetails(id, await GetSanTsgTourVisioToken());
+            //HotelDetails hotelDetails = await _tourVisioAPIService.GetHotelDetails(id, await GetSanTsgTourVisioToken());
+            string token = await GetSanTsgTourVisioToken();
+            var hotelResponse = await _sanTsgTourVisioService.GetHotelDetailsByIdAsync<GetProductInfoResponse>(id, token);
+            if (hotelResponse != null && hotelResponse.header.success && hotelResponse.body.hotel != null)
+            {
+                return View(hotelResponse.body.hotel);
+            }
 
-            return View(hotelDetails);
+            return RedirectToAction("Index");
         }
+
 
         private async Task<string> GetSanTsgTourVisioToken()
         {

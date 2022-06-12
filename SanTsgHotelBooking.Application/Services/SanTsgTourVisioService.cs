@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteRequest;
+using SanTsgHotelBooking.Application.Models.GetProductInfoRequest;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceRequest;
 using SanTsgHotelBooking.Application.Models.Requests;
 using SanTsgHotelBooking.Application.Models.TourVisioLoginRequest;
@@ -52,6 +53,17 @@ namespace SanTsgHotelBooking.Application.Services
             });
         }
 
+        public async Task<T> GetHotelDetailsByIdAsync<T>(int id, string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = Shared.StaticDetails.ApiType.POST,
+                Data = new GetProductInfoRequest() { product = id.ToString() },
+                Url = _tourvisioAPISettings.WebService + "/api/productservice/getproductInfo",
+                AccessToken = token
+            });
+        }
+
         public Task<T> BeginTransactionAsync<T>(string offerId)
         {
             throw new NotImplementedException();
@@ -62,10 +74,7 @@ namespace SanTsgHotelBooking.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<T> GetHotelDetailsByIdAsync<T>(int id)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public Task<T> GetReservationDetailAsync<T>(string resevationNumber)
         {

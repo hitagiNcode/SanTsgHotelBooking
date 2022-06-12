@@ -1,17 +1,17 @@
-﻿@model SanTsgHotelBooking.Domain.HotelDetails
+﻿@model SanTsgHotelBooking.Application.Models.GetProductInfoResponse.Hotel
 @{
-    ViewData["Title"] = "Details - "+@Model.HotelName;
+    ViewData["Title"] = "Details - "+@Model.name;
 }
 
 <div class="card  container pt-2">
     <div class="card-header bg-warning bg-gradient  ml-0  row ">
         <div class="col-12 col-md-6">
-            <h1 class="text-white">@Model.HotelName</h1>
-            <p class="text-primary"><strong> 📍 @Model.CityName - @Model.CountryName</strong></p>
+            <h1 class="text-white">@Model.name</h1>
+            <p class="text-primary"><strong> 📍 @Model.city.name - @Model.country.name</strong></p>
         </div>
         <div class="col-12 col-md-6 text-end pt-4">
-            <span class="badge bg-info pt-2" style="height:30px;">ID: @Model.HotelId</span>
-            <span class="badge bg-info pt-2" style="height:30px;">📞 : @Model.PhoneNumber</span>
+            <span class="badge bg-info pt-2" style="height:30px;">ID: @Model.id</span>
+            <span class="badge bg-info pt-2" style="height:30px;">📞 : @Model.phoneNumber</span>
         </div>
     </div>
     <div class="card-body row container bg-light bg-gradient">
@@ -19,10 +19,10 @@
             <div class="row">
                 
                 <div class="col-12 col-lg-3 text-center">
-                    <img src="@Model.ThumbnailFullUrl" width="100%" class="rounded" />
+                    <img src="@Model.thumbnailFull" width="100%" class="rounded" />
                 </div>
                 <div class="col-8 col-lg-8">
-                    <a href="@Model.HomePage" target="_blank"> Hotel HomePage</a>
+                    <a href="@Model.homePage" target="_blank"> Hotel HomePage</a>
                     
                 </div>
             </div>
@@ -33,9 +33,9 @@
             <div class="col-3 col-md-2 pb-1">
                 <a class="btn btn-warning form-control "  asp-controller="Home" asp-action="Index">Back to Home</a>
             </div>
-            <div class="col-3 col-md-2 pb-1 ">
+            <!--<div class="col-3 col-md-2 pb-1 ">
                 <a class="btn btn-success form-control " >Start Booking</a>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
