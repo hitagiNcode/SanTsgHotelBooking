@@ -9,18 +9,53 @@ $(document).ready(function () {
 
 function loadDataTable() {
     hotelDataTable = $('#tblData').DataTable({
+        "processing": true,
+        "language": {
+            processing: ""
+        },
+        "order": [[3, "desc"]],
+        "info": true,
+        "stateSave": true,
         "ajax": {
             "url": "/Search/GetHotelsPrices/",
             "data": { term: cityId },
+            "headers": { RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
             "type": "POST",
             "datatype": "json"
         },
         "columns": [
-            { "data": "id", "width": "15%" },
-            { "data": "name", "width": "15%" },
-            { "data": "stars", "width": "15%" },
-            { "data": "thumbnail", "width": "15%" }
-
-        ]
+            {
+                "width": "20%",
+                "orderable": false,
+                "data": "thumbnailFull",
+                "render": function (data) { return '<img style="max-height:150px;width:100%;" class="img-fluid" src="' + data + '" alt="HotelPicture" />' }
+            },
+            {
+                "orderable": false,
+                data: "name",
+                render: function (data, type, row) {
+                    return row.name + '<br>(' + row.address + ')';
+                },
+                autoWidth: true
+            },
+            { data: "stars", width: "5%" },
+            {
+                data: "offers[0].price.amount",
+                render: function (data, type, row) {
+                    return row.offers[0].price.amount + '<br>(' + row.offers[0].price.currency + ')';
+                },
+                width: "5%"
+            },
+            {
+                render: function (data, type, row) {
+                    return '<div class="" role="group">' + '<a href="/Search/Details?id='+ row.id +'"  class="btn btn-info"> <i class="bi bi-book"></i>Details</a>' +
+                        '</br>' + '<a href="/Search/Details?id=' + row.offers[0].offerId + '"  class="btn btn-primary mt-1"> <i class="bi bi-book"></i>Book Now</a>' + ' </div>';
+                },
+                width: "5%"
+            }
+        ],
+        "columnDefs": [
+            { "className": "dt-center", "targets": "_all" }
+        ],
     });
 }

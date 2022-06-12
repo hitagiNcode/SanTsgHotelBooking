@@ -98,7 +98,7 @@ namespace SanTsgHotelBooking.Web.Controllers
         #region APICALLS
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> GetHotelsPrices(string term)
         {
             if (!String.IsNullOrEmpty(term) && term.Length >= 3)
