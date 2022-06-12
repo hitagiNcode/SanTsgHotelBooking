@@ -4,10 +4,24 @@
 
 namespace SanTsgHotelBooking.Data.Migrations
 {
-    public partial class init : Migration
+    public partial class initnewdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CityName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CountryCode = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "DumUsers",
                 columns: table => new
@@ -28,6 +42,9 @@ namespace SanTsgHotelBooking.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Cities");
+
             migrationBuilder.DropTable(
                 name: "DumUsers");
         }

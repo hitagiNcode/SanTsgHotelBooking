@@ -11,8 +11,8 @@ using SanTsgHotelBooking.Data;
 namespace SanTsgHotelBooking.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220607190929_addcities")]
-    partial class addcities
+    [Migration("20220612212440_initnewdb")]
+    partial class initnewdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -49,7 +49,7 @@ function loadDataTable() {
             {
                 render: function (data, type, row) {
                     return '<div class="" role="group">' + '<a href="/Search/HotelDetails?id='+ row.id +'"  class="btn btn-info"> <i class="bi bi-book"></i>Details</a>' +
-                        '</br>' + '<a href="/Search/Details?id=' + row.offers[0].offerId + '"  class="btn btn-primary mt-1"> <i class="bi bi-book"></i>Book Now</a>' + ' </div>';
+                        '</br>' + '<a href="/Booking?offerId=' + row.offers[0].offerId + '"  class="btn btn-primary mt-1"> <i class="bi bi-book"></i>Book Now</a>' + ' </div>';
                 },
                 width: "5%"
             }

@@ -6,9 +6,9 @@
         Task<T> GetArrivalAutoCompleteAsync<T>(string city, string token);
         Task<T> LocationHotelPriceSearchAsync<T>(int id, string token);
         Task<T> GetHotelDetailsByIdAsync<T>(int id, string token);
-        Task<T> BeginTransactionAsync<T>(string offerId);
-        Task<T> SetReservationInfoAsync<T>(string transactionId);
-        Task<T> CommitTransactionAsync<T>(string transactionId);
-        Task<T> GetReservationDetailAsync<T>(string resevationNumber);
+        Task<T> BeginTransactionAsync<T>(string offerId, string token);
+        Task<T> SetReservationInfoAsync<T>(string transactionId, string token);
+        Task<T> CommitTransactionAsync<T>(string transactionId, string token);
+        Task<T> GetReservationDetailAsync<T>(string resevationNumber, string token);
     }
 }

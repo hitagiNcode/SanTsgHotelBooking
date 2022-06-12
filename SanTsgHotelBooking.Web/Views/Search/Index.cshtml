@@ -4,35 +4,15 @@
 }
 
 <div class="container p-3">
-    <h4 class="text-info">Please choose a city</h4>
+    <h4 class="text-info">Please Choose a City</h4>
+    <hr />
     <div class="container p-1">
-        <table id="tblData" class="table table-bordered table-striped dt-responsive nowrap" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Şehir İsmi</th>
-                    <th>Ülke Kodu</th>
-                    <th>Seç</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obj in Model)
-                {
-                    <tr>
-                        <td width="10%">
-                            @obj.CountryCode
-                        </td>
-                        <td width="40%">
-                            @obj.CityName
-                        </td>
-                        <td width="7%">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Search" asp-action="Hotels" asp-route-searchString="@obj.CityName"
-                               class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Seçim</a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @foreach (var obj in Model)
+        {
+            <div class=" btn-group m-1" role="group">
+                <a asp-controller="Search" asp-action="Hotels" asp-route-searchString="@obj.CityName"
+               class="btn btn-primary mx-2"> <i class="bi bi-pin-map"></i>@obj.CityName</a>
+            </div>
+        }
     </div>
 </div>

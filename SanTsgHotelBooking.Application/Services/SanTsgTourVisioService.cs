@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using SanTsgHotelBooking.Application.Models.BeginTransactionRequest;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteRequest;
 using SanTsgHotelBooking.Application.Models.GetProductInfoRequest;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceRequest;
@@ -64,24 +65,30 @@ namespace SanTsgHotelBooking.Application.Services
             });
         }
 
-        public Task<T> BeginTransactionAsync<T>(string offerId)
+        public async Task<T> BeginTransactionAsync<T>(string offerId, string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = Shared.StaticDetails.ApiType.POST,
+                Data = new BeginTransactionRequest() { offerIds = new List<string> { offerId } },
+                Url = _tourvisioAPISettings.WebService + "/api/bookingservice/begintransaction",
+                AccessToken = token
+            });
+        }
+
+        public Task<T> CommitTransactionAsync<T>(string transactionId, string token)
         {
             throw new NotImplementedException();
         }
 
-        public Task<T> CommitTransactionAsync<T>(string transactionId)
+
+
+        public Task<T> GetReservationDetailAsync<T>(string resevationNumber, string token)
         {
             throw new NotImplementedException();
         }
 
-
-
-        public Task<T> GetReservationDetailAsync<T>(string resevationNumber)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> SetReservationInfoAsync<T>(string transactionId)
+        public Task<T> SetReservationInfoAsync<T>(string transactionId, string token)
         {
             throw new NotImplementedException();
         }
