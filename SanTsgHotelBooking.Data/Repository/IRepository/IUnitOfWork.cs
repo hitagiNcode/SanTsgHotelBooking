@@ -6,6 +6,7 @@
 
         ICityRepository Cities { get; }
 
+        IBookingRepository Bookings { get; }
         void Save();
     }
 }

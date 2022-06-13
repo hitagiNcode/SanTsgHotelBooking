@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SanTsgHotelBooking.Application.Models.BeginTransactionResponse;
+using SanTsgHotelBooking.Application.Models.CommitTransaction.Response;
+using SanTsgHotelBooking.Application.Models.GetReservationDetail.Response;
+using SanTsgHotelBooking.Application.Models.SetReservationInfo.Response;
 using SanTsgHotelBooking.Application.Models.TourVisioLoginResponse;
 using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Data.Repository.IRepository;
+using SanTsgHotelBooking.Domain;
 using SanTsgHotelBooking.Web.Models;
 
 namespace SanTsgHotelBooking.Web.Controllers
@@ -30,39 +34,58 @@ namespace SanTsgHotelBooking.Web.Controllers
                 var beginTransResponse = await _sanTsgTourVisioService.BeginTransactionAsync<BeginTransactionResponse>(offerId, token);
                 if (beginTransResponse != null && beginTransResponse.header.success)
                 {
-                    _logger.LogInformation("transactionid: "+beginTransResponse.body.transactionId);
+                    _logger.LogInformation("transactionid: " + beginTransResponse.body.transactionId);
                     PassangerInfoVM newPassanger = new() { transactionId = beginTransResponse.body.transactionId };
                     return View(newPassanger);
                 }
             }
-            
-            return View();
-        }
-
-        public async Task<IActionResult> FinishBooking(PassangerInfoVM passangerInfo)
-        {
-
 
             return View();
         }
 
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<JsonResult> BeginTransaction(string offerId)
+        public async Task<IActionResult> CompleteBooking(PassangerInfoVM passangerInfo)
         {
-            if (!String.IsNullOrEmpty(offerId) && offerId.Length >= 5)
+            if (passangerInfo != null)
             {
                 string token = await GetSanTsgTourVisioToken();
-                var beginTransResponse = await _sanTsgTourVisioService.BeginTransactionAsync<BeginTransactionResponse>(offerId, token);
-                if (beginTransResponse != null && beginTransResponse.header.success)
+                var setResInfoResponse = await _sanTsgTourVisioService.SetReservationInfoAsync<SetReservationInfoResponse>(
+                    passangerInfo.transactionId, passangerInfo.FirstName,
+                    passangerInfo.LastName, email: passangerInfo.Email, token);
+                if (setResInfoResponse.body != null && setResInfoResponse.header.success)
                 {
-                    _logger.LogInformation(beginTransResponse.body.transactionId);
-                    return Json(beginTransResponse.body.transactionId);
+                    _logger.LogInformation("Set Info Transactionid: " + setResInfoResponse.body.transactionId);
+                    var commitTransResponse = await _sanTsgTourVisioService.CommitTransactionAsync<CommitTransactionResponse>(setResInfoResponse.body.transactionId, token);
+                    if (commitTransResponse.body != null && setResInfoResponse.header.success)
+                    {
+                        _logger.LogInformation("Success! Reservation Number: " + commitTransResponse.body.reservationNumber);
+                        var getReservationDetail = await _sanTsgTourVisioService.GetReservationDetailAsync<GetReservationDetailResponse>(commitTransResponse.body.reservationNumber, token);
+                        if (getReservationDetail.body != null && getReservationDetail.header.success)
+                        {
+                            _logger.LogInformation("Reservation Details: " + getReservationDetail.body.reservationNumber);
+                            Booking newBooking = new Booking()
+                            {
+                                ReservationNumber = getReservationDetail.body.reservationNumber,
+                                FirstName = passangerInfo.FirstName,
+                                LastName = passangerInfo.LastName,
+                                Email = passangerInfo.Email,
+                                Price = getReservationDetail.body.reservationData.reservationInfo.salePrice.amount
+                            };
+                            _unitOfWork.Bookings.Add(newBooking);
+                            _unitOfWork.Save();
+                            return View(getReservationDetail.body);
+                        }
+                    }
                 }
             }
-            return Json("Bad request");
-        }*/
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Bookings()
+        {
+            IEnumerable<Booking> bookingList = _unitOfWork.Bookings.GetAll();
+            return View(bookingList);
+        }
 
         //I need to refactor this part for SOLID princ
         private async Task<string> GetSanTsgTourVisioToken()

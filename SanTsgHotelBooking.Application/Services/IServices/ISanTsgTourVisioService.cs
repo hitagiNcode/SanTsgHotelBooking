@@ -8,7 +8,7 @@
         Task<T> GetHotelDetailsByIdAsync<T>(int id, string token);
         Task<T> GetHotelPriceAsync<T>(int id,int personAmount, string token);
         Task<T> BeginTransactionAsync<T>(string offerId, string token);
-        Task<T> SetReservationInfoAsync<T>(string transactionId, string token);
+        Task<T> SetReservationInfoAsync<T>(string transactionId, string firstname, string lastname, string email, string token);
         Task<T> CommitTransactionAsync<T>(string transactionId, string token);
         Task<T> GetReservationDetailAsync<T>(string resevationNumber, string token);
     }

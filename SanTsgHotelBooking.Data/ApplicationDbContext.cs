@@ -12,6 +12,7 @@ namespace SanTsgHotelBooking.Data
 
         public DbSet<DumUser> DumUsers { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
     }
 }

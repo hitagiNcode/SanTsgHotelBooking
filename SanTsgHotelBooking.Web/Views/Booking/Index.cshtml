@@ -4,35 +4,45 @@
 }
 
 <div class="container p-3">
-    <form method="post" asp-action="Edit">
-        <div class="border p-3 mt-4">
-            <div class="row pb-2">
-                <h2 class="text-primary">Booking Information</h2>
-                <hr />
-            </div>
-            <div class="mb-3">
-                <input asp-for="transactionId" class="form-control" value="@Model.transactionId" hidden/>
-            </div>
-            <div class="mb-3">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" />
-            </div>
-            <div class="mb-3">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" />
-            </div>
-            <div class="mb-3">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            
-            <button type="submit" class="btn btn-primary" style="width:150px">Book Now</button>
+    @if (Model != null)
+    {
+        <form method="post" asp-action="CompleteBooking">
+            <div class="border p-3 mt-4">
+                <div class="row pb-2">
+                    <h2 class="text-primary">Booking Information</h2>
+                    <hr />
+                </div>
+                <div class="mb-3">
+                    <input asp-for="transactionId" class="form-control" value="@Model.transactionId" hidden />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-            <a asp-controller="Home" asp-action="Index" class="btn btn-warning" style="width:150px">
-                Cancel
-            </a>
-        </div>
-    </form>
+                <button type="submit" class="btn btn-primary" style="width:150px">Book Now</button>
+
+                <a asp-controller="Home" asp-action="Index" class="btn btn-warning" style="width:150px">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    }
+    else
+    {
+        <h1 class="text-danger"> Test Api Booking error please choose another hotel</h1>
+        <a asp-controller="Search" asp-action="Index" class="btn btn-warning" style="width:150px">
+            Go Back to Search
+        </a>
+    }
 </div>
 

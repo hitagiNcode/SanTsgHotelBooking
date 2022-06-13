@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.Options;
 using SanTsgHotelBooking.Application.Models.BeginTransactionRequest;
 using SanTsgHotelBooking.Application.Models.CertainHotelPriceRequest;
+using SanTsgHotelBooking.Application.Models.CommitTransaction.Request;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteRequest;
 using SanTsgHotelBooking.Application.Models.GetProductInfoRequest;
+using SanTsgHotelBooking.Application.Models.GetReservationDetail.Request;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceRequest;
 using SanTsgHotelBooking.Application.Models.Requests;
+using SanTsgHotelBooking.Application.Models.SetReservationInfo.Request;
 using SanTsgHotelBooking.Application.Models.TourVisioLoginRequest;
 using SanTsgHotelBooking.Application.Services.IServices;
 using SanTsgHotelBooking.Shared.SettingsModels;
@@ -38,7 +41,7 @@ namespace SanTsgHotelBooking.Application.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = Shared.StaticDetails.ApiType.POST,
-                Data = new GetArrivalAutocompleteRequest() { Query = city},
+                Data = new GetArrivalAutocompleteRequest() { Query = city },
                 Url = _tourvisioAPISettings.WebService + "/api/productservice/getarrivalautocomplete",
                 AccessToken = token
             });
@@ -88,21 +91,41 @@ namespace SanTsgHotelBooking.Application.Services
             });
         }
 
-        public Task<T> CommitTransactionAsync<T>(string transactionId, string token)
+        public async Task<T> SetReservationInfoAsync<T>(string transactionId, string firstname, string lastname, string email, string token)
         {
-            throw new NotImplementedException();
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = Shared.StaticDetails.ApiType.POST,
+                Data = new SetReservationInfoRequest()
+                {
+                    transactionId = transactionId,
+                    travellers = new List<Traveller> { new Traveller { name = firstname, surname = lastname, address = new Address { email = email } } }
+                },
+                Url = _tourvisioAPISettings.WebService + "/api/bookingservice/setreservationinfo",
+                AccessToken = token
+            });
         }
 
-
-
-        public Task<T> GetReservationDetailAsync<T>(string resevationNumber, string token)
+        public async Task<T> CommitTransactionAsync<T>(string transactionId, string token)
         {
-            throw new NotImplementedException();
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = Shared.StaticDetails.ApiType.POST,
+                Data = new CommitTransactionRequest() { transactionId = transactionId },
+                Url = _tourvisioAPISettings.WebService + "/api/bookingservice/committransaction",
+                AccessToken = token
+            });
         }
 
-        public Task<T> SetReservationInfoAsync<T>(string transactionId, string token)
+        public async Task<T> GetReservationDetailAsync<T>(string resevationNumber, string token)
         {
-            throw new NotImplementedException();
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = Shared.StaticDetails.ApiType.POST,
+                Data = new GetReservationDetailRequest() { reservationNumber = resevationNumber},
+                Url = _tourvisioAPISettings.WebService + "/api/bookingservice/getreservationdetail",
+                AccessToken = token
+            });
         }
 
     }

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<SanTsgHotelBooking.Domain.Booking>
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<div class="container p-1">
+    <h4 class="text-warning">Current Bookings</h4>
+
+    <table class="table table-bordered table-striped mt-3" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Reservation Number
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Surname
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                
+                    <tr>
+                        <td width="10%">
+                            @obj.ReservationNumber
+                        </td>
+                        <td width="20%">
+                            @obj.FirstName
+                        </td>
+                        <td width="20%">
+                            @obj.LastName
+                        </td>
+                        <td width="20%">
+                            @obj.Email
+                        </td>
+                        <td width="10%">
+                            @obj.Price
+                        </td>
+                    </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
