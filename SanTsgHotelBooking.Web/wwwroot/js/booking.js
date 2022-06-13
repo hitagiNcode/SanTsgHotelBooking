@@ -2,8 +2,8 @@
 
 
 $(document).ready(function () {
-    offerId = $("#offerId").text();
-    AjaxInit();
+    //offerId = $("#offerId").text();
+    //AjaxInit();
 });
 
 function AjaxInit() {

@@ -1,6 +1,6 @@
 ﻿@model SanTsgHotelBooking.Application.Models.GetProductInfoResponse.Hotel
 @{
-    ViewData["Title"] = "Details - "+@Model.name;
+    ViewData["Title"] = "Details - " + @Model.name;
 }
 
 <div class="card  container pt-2">
@@ -10,28 +10,48 @@
             <p class="text-primary"><strong> 📍 @Model.city.name - @Model.country.name</strong></p>
         </div>
         <div class="col-12 col-md-6 text-end pt-4">
-            <span class="badge bg-info pt-2" style="height:30px;">ID: @Model.id</span>
+            <span class="badge bg-success pt-2" style="height:30px;">⭐ Rating: @Math.Round(@Model.rating, 1)</span>
+            <span id="hotelID" class="badge bg-info pt-2" style="height:30px;">@Model.id</span>
             <span class="badge bg-info pt-2" style="height:30px;">📞 : @Model.phoneNumber</span>
         </div>
     </div>
     <div class="card-body row container bg-light bg-gradient">
         <div class="container rounded p-2">
             <div class="row">
-                
+
                 <div class="col-12 col-lg-3 text-center">
                     <img src="@Model.thumbnailFull" width="100%" class="rounded" />
                 </div>
                 <div class="col-8 col-lg-8">
+                    <span class="badge bg-warning pt-2" style="height:30px;">@Model.stars⭐ Star Hotel </span>
+                    @if (@Model.address.addressLines.Count > 0)
+                    {
+                        <p>@Model.address.addressLines[0]  @Model.address.zipCode @Model.address.city.name @Model.country.name</p>
+                    }
                     <a href="@Model.homePage" target="_blank"> Hotel HomePage</a>
-                    
+                    <div class="mt-2">
+                        <table id="priceOfferData" class="table table-bordered table-striped dt-responsive nowrap" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">🌃 Night</th>
+                                    <th class="text-center">🕐 Check In</th>
+                                    <th class="text-center">🏨 Room Details</th>
+                                    <th class="text-center">🏷️ Price</th>
+                                    <th class="text-center">📖 Booking</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
+
             </div>
+
         </div>
     </div>
     <div class="card-footer">
         <div class="row">
             <div class="col-3 col-md-2 pb-1">
-                <a class="btn btn-warning form-control "  asp-controller="Home" asp-action="Index">Back to Home</a>
+                <a class="btn btn-warning form-control " asp-controller="Home" asp-action="Index">Back to Home</a>
             </div>
             <!--<div class="col-3 col-md-2 pb-1 ">
                 <a class="btn btn-success form-control " >Start Booking</a>
@@ -39,3 +59,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="~/js/hoteldetails.js"></script>
+}

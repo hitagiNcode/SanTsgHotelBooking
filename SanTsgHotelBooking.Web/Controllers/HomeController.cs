@@ -53,7 +53,7 @@ namespace SanTsgHotelBooking.Web.Controllers
                     ToEmail = obj.Email
                 };
                 await _emailService.SendEmailAsync(mail);
-
+                _logger.LogInformation("New User create succesfully" + obj.UserName + " " + obj.Email);
                 TempData["success"] = "User created successfully";
                 return RedirectToAction("Index");
             }
@@ -123,6 +123,8 @@ namespace SanTsgHotelBooking.Web.Controllers
             _unitOfWork.DumUser.Remove(obj);
             _unitOfWork.Save();
             TempData["success"] = "User deleted successfully";
+            _logger.LogInformation("User deleted succesfully" + obj.UserName);
+
             return RedirectToAction("Index");
         }
 
@@ -140,6 +142,8 @@ namespace SanTsgHotelBooking.Web.Controllers
             _unitOfWork.DumUser.Update(obj);
             _unitOfWork.Save();
             TempData["success"] = "User deleted softly";
+            _logger.LogInformation("User Sof Deleted succesfully" + obj.UserName);
+
             return RedirectToAction("Index");
         }
         #endregion

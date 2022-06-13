@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using SanTsgHotelBooking.Application.Models.BeginTransactionRequest;
+using SanTsgHotelBooking.Application.Models.CertainHotelPriceRequest;
 using SanTsgHotelBooking.Application.Models.GetArrivalAutocompleteRequest;
 using SanTsgHotelBooking.Application.Models.GetProductInfoRequest;
 using SanTsgHotelBooking.Application.Models.LocationHotelPriceRequest;
@@ -65,6 +66,17 @@ namespace SanTsgHotelBooking.Application.Services
             });
         }
 
+        public async Task<T> GetHotelPriceAsync<T>(int id, int personAmount, string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = Shared.StaticDetails.ApiType.POST,
+                Data = new CertainHotelPriceRequest() { Products = new List<string> { id.ToString() }, roomCriteria = new List<Models.CertainHotelPriceRequest.RoomCriterion> { new Models.CertainHotelPriceRequest.RoomCriterion { adult = personAmount } } },
+                Url = _tourvisioAPISettings.WebService + "/api/productservice/pricesearch",
+                AccessToken = token
+            });
+        }
+
         public async Task<T> BeginTransactionAsync<T>(string offerId, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
@@ -92,5 +104,6 @@ namespace SanTsgHotelBooking.Application.Services
         {
             throw new NotImplementedException();
         }
+
     }
 }

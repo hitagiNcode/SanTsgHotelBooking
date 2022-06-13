@@ -6,8 +6,18 @@ using SanTsgHotelBooking.Data.DbInitializer;
 using SanTsgHotelBooking.Data.Repository;
 using SanTsgHotelBooking.Data.Repository.IRepository;
 using SanTsgHotelBooking.Shared.SettingsModels;
+using Serilog;
+using Serilog.Formatting.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Serilog settings
+var logger = new LoggerConfiguration()
+  .WriteTo.Console()
+  .WriteTo.File(new JsonFormatter(), "logs-{Date}.json", rollingInterval: RollingInterval.Day)
+  .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -30,6 +40,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ISanTsgTourVisioService, SanTsgTourVisioService>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 

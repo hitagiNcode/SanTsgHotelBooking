@@ -13,18 +13,21 @@ namespace SanTsgHotelBooking.Web.Controllers
         private readonly ILogger<SearchController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISanTsgTourVisioService _sanTsgTourVisioService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public const string JWTKeyName = "_token";
 
-        public SearchController(ILogger<SearchController> logger, IUnitOfWork unitOfWork, ISanTsgTourVisioService sanTsgTourVisioService)
+        public SearchController(ILogger<SearchController> logger, IUnitOfWork unitOfWork, ISanTsgTourVisioService sanTsgTourVisioService, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
             _sanTsgTourVisioService = sanTsgTourVisioService;
         }
 
         public IActionResult Index()
         {
             IEnumerable<Domain.City> cities = _unitOfWork.Cities.GetAll().ToList();
+            _logger.LogInformation("List of all cities returned");
             return View(cities);
         }
 
@@ -75,29 +78,26 @@ namespace SanTsgHotelBooking.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        private async Task<string> GetSanTsgTourVisioToken()
-        {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(JWTKeyName)))
-            {
-                string newToken = "";
-                var response = await _sanTsgTourVisioService.AuthLoginTourVisioAsync<TourVisioLoginResponse>();
-                if (response != null && response.Header.success)
-                {
-                    newToken = response.Body.token;
-                    HttpContext.Session.SetString(JWTKeyName, newToken);
-                    _logger.LogInformation("Tourvisio new login requested token:" + newToken);
 
-                }
-                else
-                {
-                    _logger.LogInformation("Couldn't retrieve token" + DateTime.Now);
-                }
-            }
-            string token = HttpContext.Session.GetString(JWTKeyName);
-            return token;
-        }
 
         #region APICALLS
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> GetCertainHotelPrice(int hotelId, int adultNumber)
+        {
+            if (hotelId != 0)
+            {
+                string token = await GetSanTsgTourVisioToken();
+                var hotelResponse = await _sanTsgTourVisioService.GetHotelPriceAsync<LocationHotelPriceResponse>(hotelId, adultNumber, token);
+                if (hotelResponse != null && hotelResponse.header.success && hotelResponse.body.hotels != null)
+                {
+                    var hotelVMs = hotelResponse.body.hotels;
+                    return Json(new { data = hotelVMs });
+                }
+            }
+            return Json("Search problem...");
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -126,5 +126,42 @@ namespace SanTsgHotelBooking.Web.Controllers
         }
 
         #endregion
+
+        //I need to refactor this part for SOLID princ
+        private async Task<string> GetSanTsgTourVisioToken()
+        {
+            //string cookieValueFromReq = Request.Cookies[JWTKeyName];
+            string cookieValueFromReq = _httpContextAccessor.HttpContext.Request.Cookies[JWTKeyName];
+            if (string.IsNullOrEmpty(cookieValueFromReq))
+            {
+                string newToken = "";
+                var response = await _sanTsgTourVisioService.AuthLoginTourVisioAsync<TourVisioLoginResponse>();
+                if (response != null && response.Header.success)
+                {
+                    newToken = response.Body.token;
+                    //HttpContext.Session.SetString(JWTKeyName, newToken);
+                    _logger.LogInformation("Tourvisio new login requested token:" + newToken);
+                    CookieSet(JWTKeyName, newToken, response.Body.expiresOn);
+                }
+                else
+                {
+                    _logger.LogInformation("Couldn't retrieve token" + DateTime.Now);
+                }
+            }
+            //string token = HttpContext.Session.GetString(JWTKeyName);
+            return cookieValueFromReq;
+        }
+
+        private void CookieSet(string key, string value, DateTime? expireTime)
+        {
+            CookieOptions option = new CookieOptions();
+
+            if (expireTime.HasValue)
+                option.Expires = expireTime;
+            else
+                option.Expires = DateTime.Now.AddMilliseconds(10);
+
+            Response.Cookies.Append(key, value, option);
+        }
     }
 }
