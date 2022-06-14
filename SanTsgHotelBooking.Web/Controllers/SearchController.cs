@@ -96,7 +96,7 @@ namespace SanTsgHotelBooking.Web.Controllers
                     return Json(new { data = hotelVMs });
                 }
             }
-            return Json("Search problem...");
+            return Json(new { data = "" });
         }
 
         [HttpPost]
@@ -114,7 +114,7 @@ namespace SanTsgHotelBooking.Web.Controllers
                     return Json(new { data = hotelVMs });
                 }
             }
-            return Json("Search problem...");
+            return Json(new { data = "" });
         }
 
         [HttpPost]

@@ -11,9 +11,11 @@ function loadDataTable() {
     hotelDataTable = $('#tblData').DataTable({
         "processing": true,
         "language": {
-            processing: ""
+            processing: "Searching for best prices and hotels!",
+            emptyTable: "We couldn't find any hotels at this area for your search.",
+            loadingRecords: "Please wait while your search is loading..."
         },
-        "order": [[3, "desc"]],
+        "order": [[2, "desc"]],
         "info": true,
         "stateSave": true,
         "ajax": {

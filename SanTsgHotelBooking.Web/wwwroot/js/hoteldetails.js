@@ -9,6 +9,9 @@ $(document).ready(function () {
 function loadOfferDataTable() {
     hotelDataTable = $('#priceOfferData').DataTable({
         "lenghtChange": false,
+        "language": {
+            loadingRecords: "Please wait your offers are loading....."
+        },
         "paginate": false,
         "filter": false,
         "info": true,

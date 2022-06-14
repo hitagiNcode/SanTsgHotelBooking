@@ -4,7 +4,7 @@
 }
 
 <div class="card  container pt-2">
-    <div class="card-header bg-warning bg-gradient  ml-0  row ">
+     <div class="card-header bg-warning bg-gradient  ml-0  row ">
         <div class="col-12 col-md-6">
             <h1 class="text-white">@Model.name</h1>
             <p class="text-primary"><strong> 📍 @Model.city.name - @Model.country.name</strong></p>
@@ -18,30 +18,64 @@
     <div class="card-body row container bg-light bg-gradient">
         <div class="container rounded p-2">
             <div class="row">
-
-                <div class="col-12 col-lg-3 text-center">
-                    <img src="@Model.thumbnailFull" width="100%" class="rounded" />
-                </div>
-                <div class="col-8 col-lg-8">
-                    <span class="badge bg-warning pt-2" style="height:30px;">@Model.stars⭐ Star Hotel </span>
-                    @if (@Model.address.addressLines.Count > 0)
-                    {
-                        <p>@Model.address.addressLines[0]  @Model.address.zipCode @Model.address.city.name @Model.country.name</p>
-                    }
-                    <a href="@Model.homePage" target="_blank"> Hotel HomePage</a>
-                    <div class="mt-2">
-                        <table id="priceOfferData" class="table table-bordered table-striped dt-responsive nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">🌃 Night</th>
-                                    <th class="text-center">🕐 Check In</th>
-                                    <th class="text-center">🏨 Room Details</th>
-                                    <th class="text-center">🏷️ Price</th>
-                                    <th class="text-center">📖 Booking</th>
-                                </tr>
-                            </thead>
-                        </table>
+                <div class="col-6 col-lg-6 text-center">
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="d-block w-100" src="@Model.thumbnailFull" alt="First slide">
+                            </div>
+                            @foreach (var carouselImg in @Model.seasons[0].mediaFiles)
+                            {
+                            <div class="carousel-item">
+                                <img class="d-block w-100" src="@carouselImg.urlFull" alt="Hotel Img">
+                            </div>
+                            }
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only fw-bold">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only fw-bold">Next</span>
+                        </a>
                     </div>
+                </div>
+
+                <div class="col-7 col-lg-6 ">
+                    <span class="badge bg-warning pt-2" style="height:30px;">@Model.stars⭐ Star Hotel </span>
+
+                    @if (Model.address.addressLines.Count > 0)
+                    {
+                    <span class="m-2">@Model.address.addressLines[0]  @Model.address.zipCode @Model.address.city.name</span>
+                    }
+                    @if (Model.homePage != null)
+                    {
+                    <a href="@Model.homePage" target="_blank"> Hotel HomePage</a>
+                    }
+                    @foreach(var facility in @Model.seasons[0].facilityCategories[0].facilities )
+                    {
+                        <span class="badge bg-primary pt-2 fw-bold" style="height:30px;">@facility.name</span>
+                    }
+                </div>
+                <div class="col-12 col-lg-12 text-center mt-2">
+                    @if (Model.description != null)
+                    {
+                    <p class="fw-lighter ">@Model.description.text</p>
+                    }
+                </div>
+                <div class="mt-2">
+                    <table id="priceOfferData" class="table table-bordered table-striped dt-responsive nowrap mt-2" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center">🌃 Night</th>
+                                <th class="text-center">🕐 Check In</th>
+                                <th class="text-center">🏨 Room Details</th>
+                                <th class="text-center">🏷️ Price</th>
+                                <th class="text-center">📖 Booking</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
 
             </div>
@@ -53,13 +87,10 @@
             <div class="col-3 col-md-2 pb-1">
                 <a class="btn btn-warning form-control " asp-controller="Home" asp-action="Index">Back to Home</a>
             </div>
-            <!--<div class="col-3 col-md-2 pb-1 ">
-                <a class="btn btn-success form-control " >Start Booking</a>
-            </div>-->
         </div>
     </div>
 </div>
 
 @section Scripts{
-    <script src="~/js/hoteldetails.js"></script>
+<script src="~/js/hoteldetails.js" asp-append-version="true"></script>
 }

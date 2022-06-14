@@ -123,5 +123,20 @@ namespace SanTsgHotelBooking.Application.Models.GetProductInfoResponse
     {
         public string name { get; set; }
         public List<MediaFile> mediaFiles { get; set; }
+        public List<FacilityCategory> facilityCategories { get; set; }
+    }
+
+    public class Facility
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public string note { get; set; }
+        public bool isPriced { get; set; }
+    }
+
+    public class FacilityCategory
+    {
+        public string name { get; set; }
+        public List<Facility> facilities { get; set; }
     }
 }
