@@ -44,12 +44,6 @@ namespace SanTsgHotelBooking.Application.Services
                     case StaticDetails.ApiType.POST:
                         message.Method = HttpMethod.Post;
                         break;
-                    case StaticDetails.ApiType.PUT:
-                        message.Method = HttpMethod.Put;
-                        break;
-                    case StaticDetails.ApiType.DELETE:
-                        message.Method = HttpMethod.Delete;
-                        break;
                     default:
                         message.Method = HttpMethod.Get;
                         break;

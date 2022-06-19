@@ -90,7 +90,6 @@ namespace SanTsgHotelBooking.Web.Controllers
         //I need to refactor this part for SOLID princ
         private async Task<string> GetSanTsgTourVisioToken()
         {
-            //string cookieValueFromReq = Request.Cookies[JWTKeyName];
             string cookieValueFromReq = _httpContextAccessor.HttpContext.Request.Cookies[JWTKeyName];
             if (string.IsNullOrEmpty(cookieValueFromReq))
             {
@@ -99,7 +98,6 @@ namespace SanTsgHotelBooking.Web.Controllers
                 if (response != null && response.Header.success)
                 {
                     newToken = response.Body.token;
-                    //HttpContext.Session.SetString(JWTKeyName, newToken);
                     _logger.LogInformation("Tourvisio new login requested token:" + newToken);
                     CookieSet(JWTKeyName, newToken, response.Body.expiresOn);
                 }
@@ -108,7 +106,6 @@ namespace SanTsgHotelBooking.Web.Controllers
                     _logger.LogInformation("Couldn't retrieve token" + DateTime.Now);
                 }
             }
-            //string token = HttpContext.Session.GetString(JWTKeyName);
             return cookieValueFromReq;
         }
 

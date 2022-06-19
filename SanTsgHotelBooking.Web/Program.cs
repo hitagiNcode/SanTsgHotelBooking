@@ -30,9 +30,15 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+/*builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+    ));*/
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(
+    HerokuPostgreSQLSettings.GetHerokuConnectionString(builder.Configuration.GetConnectionString("DATABASE_URL"))
+));
+//Allows legacy datetime usage
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 builder.Services.AddHttpClient();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.Configure<TourvisioAPISettings>(builder.Configuration.GetSection("TourVisioApi"));

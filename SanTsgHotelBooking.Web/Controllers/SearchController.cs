@@ -130,7 +130,6 @@ namespace SanTsgHotelBooking.Web.Controllers
         //I need to refactor this part for SOLID princ
         private async Task<string> GetSanTsgTourVisioToken()
         {
-            //string cookieValueFromReq = Request.Cookies[JWTKeyName];
             string cookieValueFromReq = _httpContextAccessor.HttpContext.Request.Cookies[JWTKeyName];
             if (string.IsNullOrEmpty(cookieValueFromReq))
             {
